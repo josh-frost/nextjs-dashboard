@@ -1,5 +1,15 @@
 import { Revenue } from './definitions';
 
+export const debounce = (fn: Function, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: any) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  }
+};
+
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
