@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { sql } from '@vercel/postgres';
-import { date, z } from 'zod';
+import { z } from 'zod';
 
 const InvoiceFormSchema = z.object({
   id: z.string(),
@@ -42,9 +42,6 @@ export async function createInvoice(formData: FormData) {
 const UpdateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
 
 export async function updateInvoice(invoiceId: string, formData: FormData) {
-  // Test it out:
-  console.log("ID: ", invoiceId);
-  console.log(formData);
   const { customerId, amount, status } = UpdateInvoice.parse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -54,6 +51,7 @@ export async function updateInvoice(invoiceId: string, formData: FormData) {
   const amountInCents = amount * 100;
 
   try {
+
     await sql`
       UPDATE invoices
       SET customer_id = ${customerId},
